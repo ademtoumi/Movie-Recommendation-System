@@ -1,85 +1,65 @@
-# Movie Recommendation System — Association Rule Mining
+# Movie Recommendation Using Association Rule Mining
 
-> **Machine Learning Project** | ESI-SBA | 2024/2025
+**Machine Learning Project — ESI-SBA, 2024–2025**
+
+---
 
 ## Overview
 
-This project implements association rule mining (Apriori and FP-Growth) on the MovieLens dataset to discover movie co-occurrence patterns and generate recommendations. The system filters positive user interactions (ratings ≥ 3.5), encodes user-movie transactions, and extracts association rules by lift metric. A Streamlit application provides interactive exploration of recommendations with movie poster fetching via TMDB API.
+This project implements a movie recommendation system based on association rule mining applied to user rating data from the MovieLens dataset. Frequent itemset mining algorithms — Apriori and FP-Growth — are used to identify co-occurrence patterns between movies rated positively by the same users. The resulting association rules are exposed through an interactive Streamlit application, with experiment tracking managed via MLflow.
+
+---
+
+## Objectives
+
+- Apply association rule mining to user-movie interaction data to discover meaningful co-occurrence patterns suitable for recommendation.
+- Compare the Apriori and FP-Growth algorithms in terms of rule generation and computational efficiency under varying support thresholds.
+- Deploy an interactive recommendation interface and establish a reproducible experiment tracking workflow using MLflow.
+
+---
 
 ## Methodology
 
-1. **Data Filtering:** Keep ratings ≥ 3.5 to capture positive user preferences
-2. **Transaction Encoding:** Group movies per user into binary transaction matrices
-3. **Frequent Itemset Mining:** Apriori / FP-Growth with `min_support = 0.01`, `max_len = 2`
-4. **Association Rules:** Generate rules with `metric = "lift"`, `min_threshold = 0.01`
-5. **Recommendation:** Given a movie title, return consequent movies sorted by lift score
+1. **Data Preparation.** Ratings from the MovieLens dataset (ml-latest-small, 100K+ ratings) are filtered to retain only those with a score of 3.5 or above. The filtered data is encoded as a binary user-movie transaction matrix, where each entry indicates whether a given user rated a given movie positively.
 
-## Tech Stack
+2. **Frequent Itemset Mining.** Both Apriori and FP-Growth algorithms are applied to the transaction matrix with a minimum support threshold of 0.01 and a maximum itemset length of 2, producing frequent movie pairs.
 
-- Python 3.x, Streamlit
-- mlxtend (TransactionEncoder, apriori, fpgrowth, association_rules)
-- Pandas, NumPy, Requests
-- Scikit-learn
-- Jupyter Notebooks
-- MLflow (experiment tracking)
+3. **Rule Generation.** Association rules are derived from the frequent itemsets and ranked by lift, prioritizing movie pairs whose co-occurrence exceeds what would be expected under independence.
+
+4. **Streamlit Deployment.** A web application allows users to search for a movie by title and retrieve associated recommendations sorted by lift. Movie posters are fetched dynamically via the TMDB API.
+
+5. **Experiment Tracking.** MLflow records each experimental run, logging parameters (minimum support, algorithm choice) and metrics (rule count, execution time) to facilitate systematic comparison across configurations.
+
+---
+
+## Technologies
+
+Python · mlxtend · Streamlit · Pandas · NumPy · Scikit-learn · MLflow · Jupyter Notebook
+
+---
 
 ## Repository Structure
 
 ```
-.
-├── train.ipynb                    # End-to-end pipeline notebook
-├── analyze_mlflow_runs.py         # MLflow experiment analysis
+movie_recommendation_sys-master/
 ├── StreamLit/
-│   ├── app.py                     # Streamlit application
-│   ├── requirements.txt           # App dependencies
-│   └── ml-latest-small/           # MovieLens dataset
-├── report.pdf                     # Project report
-├── MLFlow-report.pdf              # Experiment tracking report
-├── screenshot.jpeg                # App screenshot
-└── README.md                      # This file
+│   └── app.py
+├── train.ipynb
+├── analyze_mlflow_runs.py
+├── report.pdf
+└── MLFlow-report.pdf
 ```
 
-## Dataset
+---
 
-- **MovieLens ml-latest-small** (GroupLens)
-- `movies.csv` — movie metadata (movieId, title, genres)
-- `ratings.csv` — user ratings (userId, movieId, rating, timestamp)
+## Report
 
-## Setup
+[Project Report](report.pdf)  
+[MLflow Experiment Analysis](MLFlow-report.pdf)
 
-```bash
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r StreamLit/requirements.txt
-pip install mlxtend seaborn pandas matplotlib jupyterlab
-
-# Run Streamlit app
-streamlit run StreamLit/app.py
-
-# Open notebook
-jupyter lab
-```
-
-> **Note:** Set `TMDB_API_KEY` as an environment variable before running the app. Get a free key at https://www.themoviedb.org/settings/api
-
-## TMDB API Configuration
-
-The app fetches movie posters from TMDB. Set your API key:
-
-```bash
-export TMDB_API_KEY="your_tmdb_api_key"
-```
-
-> Get a free API key at [https://www.themoviedb.org/settings/api](https://www.themoviedb.org/settings/api)
+---
 
 ## Authors
 
-**Adem Toumi** — ESI-SBA, Engineering Degree in AI & Data Science  
-**Ahmed Saadi** — ESI-SBA, Engineering Degree & M2 in AI & Data Science
-
-## License
-
-MIT
+Adem Toumi — ESI-SBA  
+Ahmed Saadi — ESI-SBA
